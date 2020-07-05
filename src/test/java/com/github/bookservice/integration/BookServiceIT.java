@@ -5,6 +5,7 @@ import static com.github.bookservice.constants.BookServiceTestConstants.BOOK_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+import com.github.bookservice.BookServiceApplication;
 import com.github.bookservice.dto.Book;
 import org.assertj.core.api.Assertions;
 import org.json.JSONObject;
@@ -20,11 +21,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestPropertySource(locations="classpath:application-test.properties")
 public class BookServiceIT {
   @Autowired private TestRestTemplate restTemplate;
 

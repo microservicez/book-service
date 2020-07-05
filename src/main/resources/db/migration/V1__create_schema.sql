@@ -1,0 +1,2 @@
+CREATE TABLE BOOK (ID INT AUTO_INCREMENT PRIMARY KEY,name varchar(75), author_name VARCHAR(200), isbn VARCHAR(200), category VARCHAR(200), description VARCHAR(200), price numeric);
+CREATE SEQUENCE book_id_seq;
