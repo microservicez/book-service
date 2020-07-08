@@ -1,19 +1,20 @@
 package com.github.bookservice.service;
 
-import com.github.bookservice.dto.Book;
-import com.github.bookservice.repository.BookRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import java.util.List;
-import java.util.Optional;
+import com.github.bookservice.dto.Book;
+import com.github.bookservice.exception.BookNotFoundException;
+import com.github.bookservice.repository.BookRepository;
 
 @Service
 public class BookService {
     private final BookRepository repository;
+    
     @Autowired
-    BookService(BookRepository repository) {
+    public BookService(BookRepository repository) {
         this.repository = repository;
     }
 
@@ -22,14 +23,7 @@ public class BookService {
     }
 
     public Book getBookById(Integer id) {
-        return repository.findById(id).orElse(null);
-    }
-    public Book getBookByName(String name) {
-        return repository.findByName(name).orElse(null);
-    }
-
-    public Book getBookByIsbn(String isbn) {
-        return repository.findByIsbn(isbn).orElse(null);
+        return repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
     }
 
     public Book addBook(Book book) {
@@ -37,29 +31,15 @@ public class BookService {
     }
 
     public Book modifyBook(Book book) {
-        Optional<Book> oldBook = repository.findById(book.getId());
-        if(oldBook.isEmpty()) {
-            return null;
-        }
-        book.setId(oldBook.get().getId());
+        Book oldBook = repository.findById(book.getId()).orElseThrow(() -> new BookNotFoundException(book.getId()));
+        
+        book.setId(oldBook.getId());
         return repository.save(book);
     }
 
-    public Boolean removeBookById(Integer id) {
-        Optional<Book> oldBook = repository.findById(id);
-        if (oldBook.isEmpty()) {
-            return false;
-        }
-        repository.delete(oldBook.get());
-        return true;
-    }
+    public void removeBookById(Integer id) {
+        Book oldBook = repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
 
-    public Boolean removeBookByISBN(String isbn) {
-        Optional<Book> oldBook = repository.findByIsbn(isbn);
-        if (oldBook.isEmpty()) {
-            return false;
-        }
-        repository.delete(oldBook.get());
-        return true;
+        repository.delete(oldBook);
     }
 }

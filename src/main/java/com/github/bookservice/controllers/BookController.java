@@ -1,14 +1,22 @@
 package com.github.bookservice.controllers;
 
-import com.github.bookservice.dto.Book;
-import com.github.bookservice.service.BookService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.github.bookservice.dto.Book;
+import com.github.bookservice.service.BookService;
 
 @RestController
 @RequestMapping("/api/v1/books")
@@ -18,11 +26,6 @@ public class BookController {
     @Autowired
     BookController(BookService service) {
         this.service = service;
-    }
-
-    @GetMapping("/ping")
-    public String isWorking() {
-        return "pong";
     }
 
     @PostMapping()
@@ -40,46 +43,17 @@ public class BookController {
 
     @GetMapping("{book_id}")
     public ResponseEntity<Object> getBookByIsbn(@PathVariable("book_id") Integer bookId) {
-        Book book = service.getBookById(bookId);
-        if (book == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(book);
+        return ResponseEntity.ok(service.getBookById(bookId));
     }
 
     @PutMapping()
     public ResponseEntity<Object> modifyBook(@RequestBody Book book) {
-        Book persistedBook = service.modifyBook(book);
-        if (persistedBook == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(persistedBook);
+        return ResponseEntity.ok(service.modifyBook(book));
     }
 
     @DeleteMapping("{book_id}")
     public ResponseEntity<Object> removeBook(@PathVariable("book_id") Integer id) {
-        if (service.removeBookById(id)) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("/getByIsbn")
-    public ResponseEntity<Object> getBookByIsbn(@RequestParam("isbn") String isbn) {
-        Book book = service.getBookByIsbn(isbn);
-        if (book == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(book);
-    }
-
-    @GetMapping("/booksByName/{name}")
-    public ResponseEntity<Object> getBook(@PathVariable String name) {
-        Book book = service.getBookByName(name);
-        if (book != null) {
-            return ResponseEntity.ok(book);
-        }
-        return ResponseEntity.notFound().build();
+        service.removeBookById(id);
+        return ResponseEntity.noContent().build();
     }
 }

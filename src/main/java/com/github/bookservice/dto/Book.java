@@ -9,8 +9,7 @@ import javax.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Book {
