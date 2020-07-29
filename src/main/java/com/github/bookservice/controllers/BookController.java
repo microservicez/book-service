@@ -2,6 +2,10 @@ package com.github.bookservice.controllers;
 
 import com.github.bookservice.dto.Book;
 import com.github.bookservice.service.BookService;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,28 +31,36 @@ public class BookController {
   }
 
   @PostMapping()
+  @ApiOperation(value = "Adds Book")
   public ResponseEntity<Book> addBook(@RequestBody Book book) {
     return ResponseEntity.status(HttpStatus.CREATED).body(service.addBook(book));
   }
 
   @GetMapping()
+  @ApiOperation(value = "Gets All the Book")
   public ResponseEntity<Object> getAllBooks() {
     List<Book> books = service.getBookList();
     return CollectionUtils.isEmpty(books) ? ResponseEntity.ok().build() : ResponseEntity.ok(books);
   }
 
   @GetMapping("{book_id}")
-  public ResponseEntity<Object> getBookByIsbn(@PathVariable("book_id") Integer bookId) {
+  @ApiOperation(value = "Retreives book on the basis of id")
+  public ResponseEntity<Object> getBookById(@ApiParam(value = "id of the book to be retrieved", required = true) 
+  	@PathVariable("book_id") Integer bookId) {
     return ResponseEntity.ok(service.getBookById(bookId));
   }
 
   @PutMapping()
-  public ResponseEntity<Object> modifyBook(@RequestBody Book book) {
+  @ApiOperation(value = "Modifies book on the basis entity Book")
+  public ResponseEntity<Object> modifyBook(@ApiParam(value = "Book entity that needs to be modified", required = true) 
+  	@RequestBody Book book) {
     return ResponseEntity.ok(service.modifyBook(book));
   }
 
   @DeleteMapping("{book_id}")
-  public ResponseEntity<Object> removeBook(@PathVariable("book_id") Integer id) {
+  @ApiOperation(value = "Deletes book on the basis of id")
+  public ResponseEntity<Object> removeBook(@ApiParam(value = "id of the book to be deleted", required = true) 
+  	@PathVariable("book_id") Integer id) {
     service.removeBookById(id);
     return ResponseEntity.noContent().build();
   }
