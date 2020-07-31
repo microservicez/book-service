@@ -1,3 +1,9 @@
+buildscript {
+	dependencies {
+		classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:2.2.3.RELEASE"
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.3.1.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
@@ -29,6 +35,7 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'com.h2database:h2:1.4.200'
+	testCompile 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
 	compile 'io.springfox:springfox-swagger2:2.9.2'
 	compile 'io.springfox:springfox-swagger-ui:2.9.2'
 	compile 'org.flywaydb:flyway-core:6.5.0'
@@ -46,6 +53,13 @@ dependencyManagement {
 	}
 }
 
+apply plugin: 'spring-cloud-contract'
+
 test {
 	useJUnitPlatform()
+}
+
+contracts {
+	baseClassForTests = 'com.github.bookservice.BaseClass'
+	testFramework = 'JUNIT5'
 }
